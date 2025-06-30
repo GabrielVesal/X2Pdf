@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35825.156 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "X2Pdf", "X2Pdf.csproj", "{ABBA4682-8D19-4397-A81D-1381CC47CE9D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{ABBA4682-8D19-4397-A81D-1381CC47CE9D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ABBA4682-8D19-4397-A81D-1381CC47CE9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ABBA4682-8D19-4397-A81D-1381CC47CE9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ABBA4682-8D19-4397-A81D-1381CC47CE9D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7E8576F5-3498-411E-9A5E-3AB1EF0127D8}
+	EndGlobalSection
+EndGlobal
