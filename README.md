@@ -30,7 +30,7 @@ for ($i = 0; $i -lt $images.Length; $i++) {
     $form["files"] = Get-Item $images[$i]
 }
 
-$response = Invoke-RestMethod -Uri "https://localhost:5000/api/convert/images-to-pdf" -Method Post -Form $form
+$response = Invoke-RestMethod -Uri "https://localhost:8080/api/convert/images-to-pdf" -Method Post -Form $form
 [System.IO.File]::WriteAllBytes("output.pdf", $response)
 ```
 
