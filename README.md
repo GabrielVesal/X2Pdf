@@ -141,7 +141,7 @@ A API foi otimizada para processar múltiplas imagens de forma eficiente:
 ## 🧪 Testes
 
 ### Swagger UI
-Acesse `https://localhost:5000/swagger` para testar a API interativamente.
+Acesse `https://x2pdf-01vv.onrender.com/swagger` para testar a API interativamente.
 
 ## 🤝 Contribuição
 
