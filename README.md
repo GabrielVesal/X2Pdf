@@ -49,8 +49,6 @@ Acesse [https://x2pdf-01vv.onrender.com/swagger](https://x2pdf-01vv.onrender.com
 ## Tecnologias
 
 - .NET 9
-- iText7
-- System.Drawing.Common
 - Minimal APIs
 
 ## Docker
