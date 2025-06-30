@@ -4,21 +4,20 @@ using iText.Layout.Element;
 using iText.IO.Image;
 using iText.Kernel.Geom;
 using iText.Layout.Properties;
-using System.Drawing.Imaging;
-using Image = System.Drawing.Image;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
+using SixLabors.ImageSharp.Formats.Png;
 using Path = System.IO.Path;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
 app.UseSwagger();
 app.UseSwaggerUI();
-app.MapOpenApi();
 
 app.UseHttpsRedirection();
 
@@ -31,7 +30,7 @@ app.MapPost("/api/convert/images-to-pdf", async (IFormFileCollection files) =>
 
     var allowedTypes = new HashSet<string> { "image/png", "image/jpeg", "image/jpg", "image/gif", "image/bmp" };
     var validFiles = files.Where(f => f.Length > 0 && allowedTypes.Contains(f.ContentType.ToLower())).ToList();
-    
+
     if (validFiles.Count == 0)
     {
         return Results.BadRequest("Nenhuma imagem válida encontrada. Apenas arquivos PNG, JPEG, GIF, BMP são aceitos");
@@ -42,24 +41,29 @@ app.MapPost("/api/convert/images-to-pdf", async (IFormFileCollection files) =>
         var processedImages = await Task.WhenAll(validFiles.Select(async file =>
         {
             using var imageStream = file.OpenReadStream();
-            using var image = Image.FromStream(imageStream, false, false); 
-            
+            using var image = await Image.LoadAsync(imageStream);
+
             var pageSize = PageSize.A4;
             var maxWidth = pageSize.GetWidth() - 50;
             var maxHeight = pageSize.GetHeight() - 50;
-            
+
             var scaleX = maxWidth / image.Width;
             var scaleY = maxHeight / image.Height;
             var scale = Math.Min(scaleX, scaleY);
-            
+
+            var newWidth = (int)(image.Width * scale);
+            var newHeight = (int)(image.Height * scale);
+
+            image.Mutate(x => x.Resize(newWidth, newHeight));
+
             using var tempStream = new MemoryStream();
-            image.Save(tempStream, ImageFormat.Png);
+            await image.SaveAsPngAsync(tempStream);
             
             return new
             {
                 ImageData = tempStream.ToArray(),
-                Width = image.Width * scale,
-                Height = image.Height * scale
+                Width = newWidth,
+                Height = newHeight
             };
         }));
 
@@ -67,26 +71,26 @@ app.MapPost("/api/convert/images-to-pdf", async (IFormFileCollection files) =>
         var writer = new PdfWriter(pdfStream);
         var pdf = new PdfDocument(writer);
         var document = new Document(pdf);
-        
+
         for (int i = 0; i < processedImages.Length; i++)
         {
             var processedImage = processedImages[i];
-            
+
             var pdfImage = new iText.Layout.Element.Image(ImageDataFactory.Create(processedImage.ImageData));
             pdfImage.SetWidth(processedImage.Width);
             pdfImage.SetHeight(processedImage.Height);
             pdfImage.SetHorizontalAlignment(HorizontalAlignment.CENTER);
-            
+
             document.Add(pdfImage);
-            
+
             if (i < processedImages.Length - 1)
             {
                 document.Add(new AreaBreak());
             }
         }
-        
+
         document.Close();
-        
+
         var fileName = $"{DateTime.Now:yyyyMMdd_HHmmss}.pdf";
         return Results.File(pdfStream.ToArray(), "application/pdf", fileName);
     }
