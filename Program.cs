@@ -1,13 +1,13 @@
 using iText.Kernel.Pdf;
 using iText.Layout;
 using iText.Layout.Element;
-using iText.IO.Image;
 using iText.Kernel.Geom;
 using iText.Layout.Properties;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
-using SixLabors.ImageSharp.Formats.Png;
 using Path = System.IO.Path;
+using Image = SixLabors.ImageSharp.Image;
+using iText.IO.Image;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -58,7 +58,7 @@ app.MapPost("/api/convert/images-to-pdf", async (IFormFileCollection files) =>
 
             using var tempStream = new MemoryStream();
             await image.SaveAsPngAsync(tempStream);
-            
+
             return new
             {
                 ImageData = tempStream.ToArray(),
