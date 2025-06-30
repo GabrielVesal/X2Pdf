@@ -56,4 +56,7 @@ Acesse [https://x2pdf-01vv.onrender.com/swagger](https://x2pdf-01vv.onrender.com
 ```bash
 docker build -t x2pdf .
 docker run -p 8080:8080 x2pdf
-``` 
+```
+Após o container iniciar, acesse a interface Swagger da API no navegador:
+
+http://localhost:8080/swagger
