@@ -21,6 +21,33 @@ dotnet run
 ```
 POST /api/convert/images-to-pdf
 ```
+### Executar usando a imagem Docker .tar (sem código-fonte)
+
+Baixe o arquivo x2pdf-latest.tar da release ou do repositório.
+
+Abra o terminal e navegue até a pasta onde o .tar está salvo (exemplo Windows):
+
+```
+cd C:\Users\gabriel\Downloads
+```
+
+Importe a imagem para o Docker local:
+
+```
+docker load -i x2pdf-latest.tar
+```
+
+Execute o container expondo a porta 8080:
+
+```
+docker run -p 8080:8080 x2pdf:latest
+```
+
+Acesse a interface Swagger no navegador:
+
+```
+http://localhost:8080/swagger/index.html
+```
 
 ### Exemplo com PowerShell
 ```powershell
