@@ -107,7 +107,7 @@ dotnet run
 docker build -t x2pdf .
 
 # Execução do container
-docker run -p 5000:5000 x2pdf
+docker run -p 8080:8080 x2pdf
 ```
 
 ## 🎯 Como Usar
@@ -119,7 +119,7 @@ POST /api/convert/images-to-pdf
 
 ### Exemplo com cURL
 ```bash
-curl -X POST "https://localhost:5000/api/convert/images-to-pdf" \
+curl -X POST "https://localhost:8080:8080/api/convert/images-to-pdf" \
   -F "files=@imagem1.png" \
   -F "files=@imagem2.jpg" \
   -F "files=@imagem3.gif" \
