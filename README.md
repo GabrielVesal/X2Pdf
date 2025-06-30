@@ -1,156 +1,61 @@
-# 🚀 X2Pdf - API de Conversão de Imagens para PDF
+# X2Pdf - Conversor de Imagens para PDF
 
-> **Transforme suas imagens em PDFs de forma eficiente! 📄**
+API simples para converter múltiplas imagens em um único arquivo PDF.
 
-Uma Minimal API .NET 9 otimizada que converte múltiplas imagens em um único PDF, utilizando processamento paralelo e técnicas de performance.
+## Funcionalidades
 
-## ✨ Características Principais
+- Converte imagens PNG, JPEG, GIF e BMP para PDF
+- Aceita múltiplas imagens de uma vez
+- Cada imagem vira uma página do PDF
+- Interface Swagger para testes
 
-- 🎯 **Minimal API** - Código limpo e direto ao ponto
-- ⚡ **Performance Otimizada** - Processamento paralelo com `Task.WhenAll`
-- 🖼️ **Múltiplos Formatos** - PNG, JPEG, GIF, BMP
-- 📄 **PDF Único** - Todas as imagens em um documento
-- 🐳 **Docker Ready** - Containerização completa
-- 📊 **Swagger UI** - Documentação interativa
-- 🔧 **Cross-Platform** - Funciona em Windows, Linux, macOS
+## Como Usar
 
-## 🚀 Otimizações de Performance
-
-### Processamento Paralelo com `Task.WhenAll`
-
-```csharp
-// Processamento em paralelo para melhor performance
-var processedImages = await Task.WhenAll(validFiles.Select(async file =>
-{
-    using var imageStream = file.OpenReadStream();
-    using var image = Image.FromStream(imageStream, false, false); // Sem validação extra
-    
-    // Cálculo otimizado de dimensões
-    var pageSize = PageSize.A4;
-    var maxWidth = pageSize.GetWidth() - 50;
-    var maxHeight = pageSize.GetHeight() - 50;
-    
-    var scaleX = maxWidth / (float)image.Width;
-    var scaleY = maxHeight / (float)image.Height;
-    var scale = Math.Min(scaleX, scaleY);
-    
-    // Conversão para bytes
-    using var tempStream = new MemoryStream();
-    image.Save(tempStream, ImageFormat.Png);
-    
-    return new ProcessedImage
-    {
-        ImageData = tempStream.ToArray(),
-        Width = image.Width * scale,
-        Height = image.Height * scale
-    };
-}));
-```
-
-### 🎯 Técnicas de Otimização Implementadas
-
-1. **HashSet para Validação Rápida**
-   ```csharp
-   var allowedTypes = new HashSet<string> { "image/png", "image/jpeg", "image/jpg", "image/gif", "image/bmp" };
-   ```
-
-2. **Carregamento de Imagem Otimizado**
-   ```csharp
-   Image.FromStream(imageStream, false, false) // Sem validação extra
-   ```
-
-3. **Pré-cálculo de Dimensões**
-   ```csharp
-   var scale = Math.Min(scaleX, scaleY); // Evita recálculos
-   ```
-
-4. **Loop com Índice**
-   ```csharp
-   for (int i = 0; i < processedImages.Length; i++) // Mais eficiente que foreach
-   ```
-
-5. **Gerenciamento de Memória**
-   ```csharp
-   using var tempStream = new MemoryStream(); // Dispose automático
-   ```
-
-## 🛠️ Tecnologias Utilizadas
-
-- **.NET 9** - Framework mais recente
-- **iText7** - Biblioteca PDF de alta qualidade
-- **System.Drawing.Common** - Processamento de imagens
-- **Minimal APIs** - Arquitetura moderna e eficiente
-- **Swagger/OpenAPI** - Documentação automática
-
-## 📦 Instalação e Execução
-
-### Pré-requisitos
-- .NET 9 SDK
-- Docker (opcional)
-
-### Execução Local
+### Executar Localmente
 ```bash
-# Clone o repositório
-git clone https://github.com/gabrielvesal/X2Pdf.git
-cd X2Pdf
-
-# Restaure as dependências
 dotnet restore
-
-# Execute a aplicação
 dotnet run
 ```
 
-### Execução com Docker
-```bash
-# Build da imagem
-docker build -t x2pdf .
-
-# Execução do container
-docker run -p 8080:8080 x2pdf
-```
-
-## 🎯 Como Usar
-
-### Endpoint Principal
+### Endpoint
 ```
 POST /api/convert/images-to-pdf
 ```
 
+### Exemplo com PowerShell
+```powershell
+$images = @("imagem1.png", "imagem2.jpg")
+$form = @{}
+for ($i = 0; $i -lt $images.Length; $i++) {
+    $form["files"] = Get-Item $images[$i]
+}
+
+$response = Invoke-RestMethod -Uri "https://localhost:5000/api/convert/images-to-pdf" -Method Post -Form $form
+[System.IO.File]::WriteAllBytes("output.pdf", $response)
+```
+
 ### Exemplo com cURL
 ```bash
-curl -X POST "https://localhost:8080:8080/api/convert/images-to-pdf" \
+curl -X POST "https://localhost:8080/api/convert/images-to-pdf" \
   -F "files=@imagem1.png" \
   -F "files=@imagem2.jpg" \
-  -F "files=@imagem3.gif" \
   --output output.pdf
 ```
 
-## 📊 Performance
+## Swagger
 
-A API foi otimizada para processar múltiplas imagens de forma eficiente:
+Acesse [https://x2pdf-01vv.onrender.com/swagger](https://x2pdf-01vv.onrender.com/swagger) para testar a API.
 
-- **Processamento paralelo** com `Task.WhenAll`
-- **Validação otimizada** usando HashSet
-- **Gerenciamento de memória** eficiente
-- **Cálculos pré-otimizados** de dimensões
+## Tecnologias
 
-*O tempo de processamento varia conforme o tamanho e quantidade das imagens enviadas.*
+- .NET 9
+- iText7
+- System.Drawing.Common
+- Minimal APIs
 
+## Docker
 
-## 🧪 Testes
-
-### Swagger UI
-Acesse `https://x2pdf-01vv.onrender.com/swagger` para testar a API interativamente.
-
-## 🤝 Contribuição
-
-1. Fork o projeto
-2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
-3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
-4. Push para a branch (`git push origin feature/AmazingFeature`)
-5. Abra um Pull Request
-
-## 📝 Licença
-
-Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+```bash
+docker build -t x2pdf .
+docker run -p 8080:8080 x2pdf
+``` 
