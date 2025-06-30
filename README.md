@@ -23,7 +23,7 @@ POST /api/convert/images-to-pdf
 ```
 ### Executar usando a imagem Docker .tar (sem código-fonte)
 
-Baixe o arquivo x2pdf-latest.tar da release ou do repositório.
+[Baixe o arquivo x2pdf-latest.tar da release ou do repositório.](https://github.com/GabrielVesal/X2Pdf/releases/tag/v1.0.0)
 
 Abra o terminal e navegue até a pasta onde o .tar está salvo (exemplo Windows):
 
